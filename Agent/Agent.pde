@@ -1,46 +1,61 @@
-Agent test = new Agent(new PVector(100,100), new PVector(5,5), new PVector(1,1));
+Agent [] agents;
+PImage img;
+static int AGENT_SIZE = 1;
+static int NUM_AGENTS = 50;
 
 void setup() {
-  size(600,800);
+  size(1000,1000);
   smooth();
+  noStroke();
+  background(255);
   
+  agents = new Agent[NUM_AGENTS];
+
+  for (int i=0; i < NUM_AGENTS; ++i) {
+    agents[i] = new Agent(random(0,width),random(0,height));
+  }
 }
 
 void draw() {
-  background(0);
-  fill(255);
-  test.update();
-  test.render();
+  //background(255);
+  for (int i=0; i < NUM_AGENTS; ++i) {
+    agents[i].move();
+  }
 }
 
 class Agent {
-  
-  PVector location;
-  PVector velocity;
-  PVector acceleration;
-  
-  public Agent(PVector loc, PVector vel, PVector acc) {
-    this.location = loc;
-    this.velocity = vel;
-    this.acceleration = acc; 
+  PVector loc;
+
+  Agent(float xpos, float ypos) {
+    loc = new PVector(xpos, ypos);
   }
- 
-  public Agent(PVector loc, PVector vel) {
-    Agent(loc, vel, new PVector());
-  }  
-  
-  public Agent(PVector loc) {
-    Agent(loc, new PVector(), new PVector());
-  }
-  
-  void update() {
-    location.add(velocity);
-    velocity.add(acceleration); 
+
+  void move() {
+
+    fill(0, 30);
+    //rect(loc.x, loc.y, AGENT_SIZE, AGENT_SIZE);
+    ellipse(loc.x, loc.y, AGENT_SIZE, AGENT_SIZE);
+
+    float moveX = int(random(-2, 2)) * AGENT_SIZE;
+    float moveY = int(random(-2, 2)) * AGENT_SIZE;
+
+    PVector move = new PVector(moveX, moveY);
+    loc.add(move);
+    
+    checkBounds();    
   }
   
-  void render() {
-    ellipse(location.x, location.y, 5, 5); 
+  void checkBounds() {
+    if (loc.x > width) {
+      loc.x = 0;
+    } else if (loc.x < 0) {
+      loc.x = width;
+    }
+
+    if (loc.y > height) {
+      loc.y = 0;
+    } else if (loc.y < 0) {
+      loc.y = height;
+    }
   }
 }
-
-
